@@ -1,0 +1,1148 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="A hands-on atlas of 100 tiny web animations. Explore, hover, click, and get inspired."
+    />
+    <meta name="theme-color" content="#0c0d12" />
+    <title>Motion Atlas — 100 little moments</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        --ink: #f5f2ec;
+        --muted: #8d8c98;
+        --line: rgba(255, 255, 255, 0.1);
+        --panel: #15161e;
+        --canvas: #0c0d12;
+        --accent: #c6ff6b;
+        --violet: #9c8bff;
+        --radius: 16px;
+        font-family:
+          "Inter", "Segoe UI", "Helvetica Neue", sans-serif;
+        font-synthesis: none;
+        text-rendering: optimizeLegibility;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        min-width: 320px;
+        margin: 0;
+        color: var(--ink);
+        background:
+          radial-gradient(ellipse at 70% -20%, rgba(112, 82, 214, 0.13), transparent 42%),
+          var(--canvas);
+      }
+
+      button,
+      input {
+        font: inherit;
+      }
+
+      button {
+        color: inherit;
+      }
+
+      .shell {
+        width: min(1440px, 100%);
+        margin: 0 auto;
+        padding: 0 42px 72px;
+      }
+
+      .topbar {
+        height: 76px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 11px;
+        color: var(--ink);
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 720;
+        letter-spacing: 0.02em;
+      }
+
+      .brand-mark {
+        width: 25px;
+        height: 25px;
+        display: grid;
+        place-items: center;
+        border-radius: 8px;
+        color: #14150f;
+        background: var(--accent);
+        font-size: 15px;
+      }
+
+      .top-note {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        color: var(--muted);
+        font-size: 11px;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+
+      .status-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--accent);
+        box-shadow: 0 0 14px rgba(198, 255, 107, 0.6);
+      }
+
+      .hero {
+        padding: 75px 0 43px;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: end;
+        gap: 28px;
+      }
+
+      .eyebrow {
+        margin: 0 0 17px;
+        color: var(--accent);
+        font: 600 10px/1.2 ui-monospace, SFMono-Regular, Menlo, monospace;
+        letter-spacing: 0.17em;
+        text-transform: uppercase;
+      }
+
+      h1 {
+        max-width: 740px;
+        margin: 0;
+        font-size: clamp(42px, 6vw, 78px);
+        font-weight: 620;
+        letter-spacing: -0.075em;
+        line-height: 0.98;
+      }
+
+      h1 span {
+        color: #797686;
+      }
+
+      .hero-copy {
+        max-width: 470px;
+        margin: 19px 0 0;
+        color: #a7a5af;
+        font-size: 14px;
+        line-height: 1.65;
+      }
+
+      .count-card {
+        min-width: 144px;
+        padding: 17px 19px;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.025);
+      }
+
+      .count-card strong {
+        display: block;
+        color: var(--accent);
+        font: 560 31px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+        letter-spacing: -0.07em;
+      }
+
+      .count-card span {
+        display: block;
+        margin-top: 8px;
+        color: var(--muted);
+        font-size: 10px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .toolbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+        padding: 17px 0 20px;
+        border-top: 1px solid var(--line);
+      }
+
+      .filters {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 7px;
+      }
+
+      .filter {
+        padding: 8px 11px;
+        border: 1px solid transparent;
+        border-radius: 7px;
+        background: transparent;
+        color: #92909b;
+        cursor: pointer;
+        font-size: 11px;
+        transition:
+          color 160ms ease,
+          background 160ms ease,
+          border-color 160ms ease;
+      }
+
+      .filter:hover {
+        color: var(--ink);
+        background: rgba(255, 255, 255, 0.04);
+      }
+
+      .filter[aria-pressed="true"] {
+        color: var(--ink);
+        border-color: var(--line);
+        background: #1b1c25;
+      }
+
+      .filter-count {
+        margin-left: 5px;
+        color: #676674;
+        font: 10px ui-monospace, SFMono-Regular, Menlo, monospace;
+      }
+
+      .search {
+        position: relative;
+        flex: 0 0 225px;
+      }
+
+      .search svg {
+        position: absolute;
+        top: 50%;
+        left: 12px;
+        width: 14px;
+        height: 14px;
+        color: #777582;
+        transform: translateY(-50%);
+        pointer-events: none;
+      }
+
+      .search input {
+        width: 100%;
+        height: 36px;
+        padding: 0 12px 0 35px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        outline: none;
+        color: var(--ink);
+        background: rgba(255, 255, 255, 0.025);
+        font-size: 11px;
+      }
+
+      .search input:focus {
+        border-color: rgba(198, 255, 107, 0.55);
+        box-shadow: 0 0 0 3px rgba(198, 255, 107, 0.08);
+      }
+
+      .search input::placeholder {
+        color: #6f6d79;
+      }
+
+      .results-line {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 0 13px;
+        color: #797784;
+        font: 10px ui-monospace, SFMono-Regular, Menlo, monospace;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+
+      .motion-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      .motion-card {
+        min-width: 0;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.085);
+        border-radius: var(--radius);
+        background: linear-gradient(145deg, #191a23, #13141b 78%);
+        transition:
+          border-color 180ms ease,
+          transform 180ms ease;
+      }
+
+      .motion-card:hover {
+        border-color: rgba(255, 255, 255, 0.18);
+        transform: translateY(-2px);
+      }
+
+      .demo-stage {
+        position: relative;
+        height: 158px;
+        display: grid;
+        overflow: hidden;
+        place-items: center;
+        isolation: isolate;
+        background:
+          radial-gradient(circle at 50% 50%, hsla(var(--hue), 90%, 65%, 0.09), transparent 52%),
+          #12131a;
+        --mx: 50%;
+        --my: 50%;
+        --rx: 0deg;
+        --ry: 0deg;
+        --twist: 0deg;
+        --dx: 0px;
+        --dy: 0px;
+        --weak-dx: 0px;
+        --weak-dy: 0px;
+        --away-dx: 0px;
+        --away-dy: 0px;
+        --slow-dx: 0px;
+        --slow-dy: 0px;
+        --tilt-dy: 0px;
+      }
+
+      .demo-stage::before,
+      .demo-stage::after {
+        position: absolute;
+        z-index: -1;
+        content: "";
+        pointer-events: none;
+      }
+
+      .demo-stage::before {
+        inset: 0;
+        opacity: 0;
+        background: radial-gradient(
+          130px circle at var(--mx) var(--my),
+          hsla(var(--hue), 95%, 66%, 0.2),
+          transparent 75%
+        );
+        transition: opacity 200ms ease;
+      }
+
+      .demo-stage[data-category="cursor"]:hover::before {
+        opacity: 1;
+      }
+
+      .demo-stage[data-category="background"] {
+        background:
+          radial-gradient(circle at var(--mx) var(--my), hsla(var(--hue), 85%, 62%, 0.18), transparent 35%),
+          #12131a;
+      }
+
+      .stage-grid {
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        opacity: 0.3;
+        background-image: linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+        background-size: 22px 22px;
+        mask-image: radial-gradient(ellipse at center, black, transparent 78%);
+      }
+
+      .demo-subject {
+        position: relative;
+        display: grid;
+        min-width: 84px;
+        min-height: 54px;
+        place-items: center;
+        color: white;
+        font-size: 13px;
+        font-weight: 620;
+        letter-spacing: -0.02em;
+        transition:
+          transform 320ms cubic-bezier(0.2, 0.8, 0.2, 1),
+          filter 250ms ease,
+          color 250ms ease,
+          background 250ms ease,
+          border-radius 250ms ease,
+          box-shadow 250ms ease;
+        will-change: transform;
+      }
+
+      .demo-subject .glyph {
+        font-size: 31px;
+        line-height: 1;
+      }
+
+      .demo-subject .mini-label {
+        font-size: 11px;
+      }
+
+      .subject-pill {
+        min-width: 100px;
+        padding: 12px 18px;
+        border: 1px solid hsla(var(--hue), 90%, 72%, 0.25);
+        border-radius: 11px;
+        background: hsla(var(--hue), 70%, 55%, 0.17);
+        box-shadow: 0 7px 25px hsla(var(--hue), 90%, 50%, 0.1);
+      }
+
+      .subject-card {
+        width: 112px;
+        height: 78px;
+        min-width: 0;
+        min-height: 0;
+        border: 1px solid hsla(var(--hue), 90%, 72%, 0.35);
+        border-radius: 11px;
+        background: linear-gradient(145deg, hsla(var(--hue), 80%, 58%, 0.38), rgba(255, 255, 255, 0.035));
+        box-shadow: 0 12px 28px rgba(0, 0, 0, 0.24);
+      }
+
+      .subject-text {
+        min-width: 0;
+        min-height: 0;
+        color: #e7e4f0;
+        background: transparent;
+        font-size: 16px;
+        font-weight: 700;
+      }
+
+      .subject-icon {
+        min-width: 0;
+        min-height: 0;
+        color: hsl(var(--hue), 96%, 75%);
+        background: transparent;
+        filter: drop-shadow(0 0 15px hsla(var(--hue), 95%, 65%, 0.28));
+      }
+
+      .subject-loader {
+        min-width: 42px;
+        min-height: 42px;
+        border: 3px solid hsla(var(--hue), 90%, 72%, 0.22);
+        border-top-color: hsl(var(--hue), 95%, 72%);
+        border-radius: 50%;
+        background: transparent;
+      }
+
+      .subject-button {
+        min-width: 103px;
+        min-height: 0;
+        padding: 12px 18px;
+        border: 1px solid hsla(var(--hue), 95%, 75%, 0.32);
+        border-radius: 10px;
+        color: #f3edff;
+        background: hsla(var(--hue), 75%, 58%, 0.24);
+        cursor: pointer;
+      }
+
+      .subject-button:focus-visible {
+        outline: 2px solid white;
+        outline-offset: 3px;
+      }
+
+      .demo-stage[data-category="hover"] .demo-subject:hover {
+        filter: brightness(1.25);
+      }
+
+      .demo-stage[data-category="hover"][data-variant="0"] .demo-subject:hover { transform: translateY(-9px); }
+      .demo-stage[data-category="hover"][data-variant="1"] .demo-subject:hover { transform: rotate(-7deg) scale(1.04); }
+      .demo-stage[data-category="hover"][data-variant="2"] .demo-subject:hover { box-shadow: 0 0 30px hsla(var(--hue), 95%, 65%, 0.55); }
+      .demo-stage[data-category="hover"][data-variant="3"] .demo-subject:hover { transform: scale(1.12); }
+      .demo-stage[data-category="hover"][data-variant="4"] .demo-subject:hover { transform: perspective(350px) rotateY(18deg); }
+      .demo-stage[data-category="hover"][data-variant="5"] .demo-subject:hover { transform: skewY(-5deg) translateX(5px); }
+      .demo-stage[data-category="hover"][data-variant="6"] .demo-subject:hover { border-radius: 25px; transform: scale(1.08); }
+      .demo-stage[data-category="hover"][data-variant="7"] .demo-subject:hover { transform: translateY(-5px) rotate(3deg); filter: hue-rotate(35deg); }
+      .demo-stage[data-category="hover"][data-variant="8"] .demo-subject:hover { transform: rotate(180deg); }
+      .demo-stage[data-category="hover"][data-variant="9"] .demo-subject:hover { transform: translateX(9px); box-shadow: -8px 0 hsla(var(--hue), 95%, 75%, 0.4), -16px 0 hsla(var(--hue), 95%, 75%, 0.2); }
+
+      .demo-stage[data-category="cursor"] .demo-subject {
+        transform: translate(var(--dx), var(--dy)) rotateX(var(--rx)) rotateY(var(--ry));
+      }
+
+      .demo-stage[data-category="cursor"][data-variant="0"] .demo-subject { transition-duration: 120ms; }
+      .demo-stage[data-category="cursor"][data-variant="1"] .demo-subject { transform: translate(var(--weak-dx), var(--weak-dy)); }
+      .demo-stage[data-category="cursor"][data-variant="2"] .demo-subject { transform: rotateX(var(--rx)) rotateY(var(--ry)) translateY(var(--tilt-dy)); }
+      .demo-stage[data-category="cursor"][data-variant="3"] .demo-subject { transform: translate(var(--dx), var(--dy)) rotate(var(--twist)); }
+      .demo-stage[data-category="cursor"][data-variant="4"] .demo-subject { transform: translate(var(--away-dx), var(--away-dy)) scale(1.08); }
+      .demo-stage[data-category="cursor"][data-variant="5"] .demo-subject { transform: translate(var(--dx), var(--dy)) scale(1.08); }
+      .demo-stage[data-category="cursor"][data-variant="6"] .demo-subject { transform: rotateX(var(--rx)) rotateY(var(--ry)) scale(1.14); }
+      .demo-stage[data-category="cursor"][data-variant="7"] .demo-subject { transition-duration: 520ms; transform: translate(var(--slow-dx), var(--slow-dy)) rotateY(var(--ry)); }
+      .demo-stage[data-category="cursor"][data-variant="8"] .demo-subject { transform: translate(var(--dx), 0) rotateY(var(--ry)); }
+      .demo-stage[data-category="cursor"][data-variant="9"] .demo-subject { transform: translate(0, var(--dy)) rotateX(var(--rx)); }
+      .demo-stage[data-category="cursor"][data-variant="2"],
+      .demo-stage[data-category="cursor"][data-variant="6"],
+      .demo-stage[data-category="cursor"][data-variant="7"] { perspective: 700px; }
+
+      .demo-stage[data-category="click"] .demo-subject { transition: transform 360ms cubic-bezier(0.18, 0.9, 0.32, 1.4), filter 220ms ease; }
+      .demo-stage[data-category="click"][data-variant="0"] .demo-subject.is-active { transform: scale(0.78); }
+      .demo-stage[data-category="click"][data-variant="1"] .demo-subject.is-active { animation: click-pop 450ms ease; }
+      .demo-stage[data-category="click"][data-variant="2"] .demo-subject.is-active { transform: rotate(14deg) scale(1.1); filter: brightness(1.4); }
+      .demo-stage[data-category="click"][data-variant="3"] .demo-subject.is-active { border-radius: 40px; transform: scale(1.12); }
+      .demo-stage[data-category="click"][data-variant="4"] .demo-subject.is-active { animation: click-shake 420ms ease; }
+      .demo-stage[data-category="click"][data-variant="5"] .demo-subject.is-active { transform: translateY(-18px) rotate(-8deg); }
+      .demo-stage[data-category="click"][data-variant="6"] .demo-subject.is-active { transform: rotateY(180deg); }
+      .demo-stage[data-category="click"][data-variant="7"] .demo-subject.is-active { box-shadow: 0 0 0 13px hsla(var(--hue), 90%, 65%, 0.15); }
+      .demo-stage[data-category="click"][data-variant="8"] .demo-subject.is-active { animation: click-heart 550ms cubic-bezier(0.2, 0.8, 0.3, 1.3); }
+      .demo-stage[data-category="click"][data-variant="9"] .demo-subject.is-active { transform: translateX(18px); }
+
+      @keyframes click-pop { 45% { transform: translateY(-15px) scale(1.12); } 100% { transform: translateY(0) scale(1); } }
+      @keyframes click-shake { 20%, 60% { transform: translateX(-8px) rotate(-5deg); } 40%, 80% { transform: translateX(8px) rotate(5deg); } }
+      @keyframes click-heart { 35% { transform: scale(1.3); } 65% { transform: scale(0.88); } 100% { transform: scale(1); } }
+
+      .demo-stage[data-category="text"] .demo-subject { animation-duration: 1.8s; animation-timing-function: ease-in-out; animation-iteration-count: infinite; }
+      .demo-stage[data-category="text"][data-variant="0"] .demo-subject { animation-name: text-float; }
+      .demo-stage[data-category="text"][data-variant="1"] .demo-subject { animation-name: text-wave; }
+      .demo-stage[data-category="text"][data-variant="2"] .demo-subject { animation-name: text-fade; }
+      .demo-stage[data-category="text"][data-variant="3"] .demo-subject { animation-name: text-jitter; }
+      .demo-stage[data-category="text"][data-variant="4"] .demo-subject { animation-name: text-track; }
+      .demo-stage[data-category="text"][data-variant="5"] .demo-subject { animation-name: text-glow; }
+      .demo-stage[data-category="text"][data-variant="6"] .demo-subject { animation-name: text-blur; }
+      .demo-stage[data-category="text"][data-variant="7"] .demo-subject { animation-name: text-swing; }
+      .demo-stage[data-category="text"][data-variant="8"] .demo-subject { animation-name: text-color; }
+      .demo-stage[data-category="text"][data-variant="9"] .demo-subject { animation-name: text-bob; }
+      @keyframes text-float { 50% { transform: translateY(-9px); } }
+      @keyframes text-wave { 25% { transform: translateY(-7px) rotate(-3deg); } 75% { transform: translateY(5px) rotate(3deg); } }
+      @keyframes text-fade { 50% { opacity: 0.25; transform: scale(0.94); } }
+      @keyframes text-jitter { 5%, 15%, 25% { transform: translateX(-2px); text-shadow: 3px 0 #ff4d9d, -3px 0 #53e2ff; } 10%, 20% { transform: translateX(2px); } }
+      @keyframes text-track { 50% { letter-spacing: 0.18em; } }
+      @keyframes text-glow { 50% { filter: drop-shadow(0 0 12px hsl(var(--hue), 90%, 70%)); } }
+      @keyframes text-blur { 50% { filter: blur(2px); opacity: 0.55; } }
+      @keyframes text-swing { 25% { transform: rotate(9deg); } 75% { transform: rotate(-9deg); } }
+      @keyframes text-color { 50% { color: hsl(var(--hue), 95%, 75%); } }
+      @keyframes text-bob { 33% { transform: translateY(-8px) scale(1.05); } 66% { transform: translateY(3px) scale(0.98); } }
+
+      .demo-stage[data-category="loader"] .demo-subject { min-width: 38px; min-height: 38px; }
+      .demo-stage[data-category="loader"][data-variant="0"] .demo-subject { animation: load-spin 1s linear infinite; }
+      .demo-stage[data-category="loader"][data-variant="1"] .demo-subject { animation: load-pulse 1.1s ease-in-out infinite; }
+      .demo-stage[data-category="loader"][data-variant="2"] .demo-subject { animation: load-orbit 1.5s ease-in-out infinite; }
+      .demo-stage[data-category="loader"][data-variant="3"] .demo-subject { animation: load-flip 1s ease-in-out infinite; }
+      .demo-stage[data-category="loader"][data-variant="4"] .demo-subject { animation: load-breathe 1.2s ease-in-out infinite; }
+      .demo-stage[data-category="loader"][data-variant="5"] .demo-subject { animation: load-wiggle 0.7s ease-in-out infinite; }
+      .demo-stage[data-category="loader"][data-variant="6"] .demo-subject { animation: load-ring 1.3s ease-in-out infinite; }
+      .demo-stage[data-category="loader"][data-variant="7"] .demo-subject { animation: load-dots 0.8s ease-in-out infinite; }
+      .demo-stage[data-category="loader"][data-variant="8"] .demo-subject { animation: load-scan 1.2s ease-in-out infinite; }
+      .demo-stage[data-category="loader"][data-variant="9"] .demo-subject { animation: load-squish 0.9s ease-in-out infinite; }
+      @keyframes load-spin { to { transform: rotate(360deg); } }
+      @keyframes load-pulse { 50% { transform: scale(1.25); opacity: 0.5; } }
+      @keyframes load-orbit { 50% { transform: rotate(180deg) scale(0.7); border-radius: 8px; } }
+      @keyframes load-flip { 50% { transform: rotateY(180deg); border-radius: 50%; } }
+      @keyframes load-breathe { 50% { transform: scale(0.74); opacity: 0.4; } }
+      @keyframes load-wiggle { 25% { transform: rotate(15deg); } 75% { transform: rotate(-15deg); } }
+      @keyframes load-ring { 50% { box-shadow: 0 0 0 11px hsla(var(--hue), 85%, 65%, 0.08); } }
+      @keyframes load-dots { 33% { transform: translateY(-9px); } 66% { transform: translateY(4px); } }
+      @keyframes load-scan { 50% { transform: scaleX(1.7); border-radius: 8px; } }
+      @keyframes load-squish { 35% { transform: scale(1.3, 0.7); } 65% { transform: scale(0.75, 1.25); } }
+
+      .demo-stage[data-category="background"] .demo-subject { animation: bg-float 2.8s ease-in-out infinite; }
+      .demo-stage[data-category="background"][data-variant="0"] { background-size: 160% 160%; animation: bg-gradient 5s ease infinite; }
+      .demo-stage[data-category="background"][data-variant="1"] .stage-grid { opacity: 0.75; background-size: 14px 14px; }
+      .demo-stage[data-category="background"][data-variant="2"]::after { width: 130px; height: 130px; border-radius: 50%; background: hsla(var(--hue), 85%, 64%, 0.17); filter: blur(26px); animation: bg-blob 5s ease-in-out infinite alternate; }
+      .demo-stage[data-category="background"][data-variant="3"] { background-image: radial-gradient(circle at var(--mx) var(--my), hsla(var(--hue), 90%, 70%, 0.22), transparent 48%), #12131a; }
+      .demo-stage[data-category="background"][data-variant="4"] .stage-grid { opacity: 0.7; background-size: 32px 32px; transform: rotate(12deg) scale(1.4); }
+      .demo-stage[data-category="background"][data-variant="5"]::after { inset: -100%; background: repeating-linear-gradient(115deg, transparent 0 15px, hsla(var(--hue), 85%, 68%, 0.1) 16px 17px); animation: bg-pan 7s linear infinite; }
+      .demo-stage[data-category="background"][data-variant="6"] { background-image: radial-gradient(ellipse at 50% 120%, hsla(var(--hue), 80%, 60%, 0.25), transparent 60%), #12131a; }
+      .demo-stage[data-category="background"][data-variant="7"]::after { inset: 0; background: radial-gradient(circle, hsla(var(--hue), 90%, 80%, 0.45) 1px, transparent 2px); background-size: 23px 23px; animation: bg-twinkle 2s ease-in-out infinite alternate; }
+      .demo-stage[data-category="background"][data-variant="8"] { background-image: repeating-linear-gradient(90deg, transparent 0 15px, hsla(var(--hue), 85%, 68%, 0.06) 16px 17px), #12131a; }
+      .demo-stage[data-category="background"][data-variant="9"]::after { inset: 0; opacity: 0.6; background: linear-gradient(110deg, transparent 30%, hsla(var(--hue), 95%, 75%, 0.13), transparent 70%); animation: bg-sheen 3s ease-in-out infinite; }
+      @keyframes bg-float { 50% { transform: translateY(-5px); } }
+      @keyframes bg-gradient { 50% { filter: hue-rotate(35deg); } }
+      @keyframes bg-blob { to { transform: translate(38px, -20px) scale(0.8); } }
+      @keyframes bg-pan { to { transform: translateX(80px); } }
+      @keyframes bg-twinkle { to { opacity: 0.15; transform: scale(1.1); } }
+      @keyframes bg-sheen { 50% { transform: translateX(80%); } }
+
+      .demo-stage[data-category="card"] .demo-subject { transform-style: preserve-3d; }
+      .demo-stage[data-category="card"][data-variant="0"]:hover .demo-subject { transform: translateY(-7px) rotateX(7deg) rotateY(-9deg); }
+      .demo-stage[data-category="card"][data-variant="1"]:hover .demo-subject { transform: perspective(400px) rotateY(180deg); }
+      .demo-stage[data-category="card"][data-variant="2"]:hover .demo-subject { transform: rotate(-5deg) translateY(-4px); }
+      .demo-stage[data-category="card"][data-variant="3"]:hover .demo-subject { transform: scale(1.08); box-shadow: 11px 9px 0 hsla(var(--hue), 80%, 65%, 0.2), 22px 18px 0 hsla(var(--hue), 80%, 65%, 0.1); }
+      .demo-stage[data-category="card"][data-variant="4"]:hover .demo-subject { transform: perspective(400px) rotateX(-14deg) translateY(-4px); }
+      .demo-stage[data-category="card"][data-variant="5"]:hover .demo-subject { animation: card-swing 750ms ease; }
+      .demo-stage[data-category="card"][data-variant="6"]:hover .demo-subject { transform: translateX(14px) rotate(3deg); }
+      .demo-stage[data-category="card"][data-variant="7"]:hover .demo-subject { transform: perspective(500px) rotateY(-14deg) rotateX(8deg) scale(1.05); }
+      .demo-stage[data-category="card"][data-variant="8"]:hover .demo-subject { border-radius: 25px; transform: translateY(-6px); }
+      .demo-stage[data-category="card"][data-variant="9"]:hover .demo-subject { filter: brightness(1.4) saturate(1.5); transform: scale(1.05); }
+      @keyframes card-swing { 20% { transform: rotate(8deg); } 40% { transform: rotate(-6deg); } 60% { transform: rotate(4deg); } 80% { transform: rotate(-2deg); } }
+
+      .demo-stage[data-category="icon"] .demo-subject { animation-duration: 1.7s; animation-timing-function: ease-in-out; animation-iteration-count: infinite; }
+      .demo-stage[data-category="icon"][data-variant="0"] .demo-subject { animation-name: icon-spin; }
+      .demo-stage[data-category="icon"][data-variant="1"] .demo-subject { animation-name: icon-pulse; }
+      .demo-stage[data-category="icon"][data-variant="2"] .demo-subject { animation-name: icon-swing; }
+      .demo-stage[data-category="icon"][data-variant="3"] .demo-subject { animation-name: icon-float; }
+      .demo-stage[data-category="icon"][data-variant="4"] .demo-subject { animation-name: icon-pop; }
+      .demo-stage[data-category="icon"][data-variant="5"] .demo-subject { animation-name: icon-wobble; }
+      .demo-stage[data-category="icon"][data-variant="6"] .demo-subject { animation-name: icon-flip; }
+      .demo-stage[data-category="icon"][data-variant="7"] .demo-subject { animation-name: icon-blink; }
+      .demo-stage[data-category="icon"][data-variant="8"] .demo-subject { animation-name: icon-orbit; }
+      .demo-stage[data-category="icon"][data-variant="9"] .demo-subject { animation-name: icon-heartbeat; }
+      @keyframes icon-spin { 50% { transform: rotate(180deg); } }
+      @keyframes icon-pulse { 50% { transform: scale(1.25); } }
+      @keyframes icon-swing { 25% { transform: rotate(20deg); } 75% { transform: rotate(-20deg); } }
+      @keyframes icon-float { 50% { transform: translateY(-10px); } }
+      @keyframes icon-pop { 30% { transform: scale(1.4); } 60% { transform: scale(0.9); } }
+      @keyframes icon-wobble { 15% { transform: translateX(-8px) rotate(-12deg); } 30% { transform: translateX(6px) rotate(8deg); } 45% { transform: translateX(-4px) rotate(-5deg); } }
+      @keyframes icon-flip { 50% { transform: rotateY(180deg); } }
+      @keyframes icon-blink { 50% { opacity: 0.25; transform: scale(0.85); } }
+      @keyframes icon-orbit { 50% { transform: rotate(45deg) translate(8px, -8px); } }
+      @keyframes icon-heartbeat { 15%, 45% { transform: scale(1.25); } 30%, 60% { transform: scale(1); } }
+
+      .demo-stage[data-category="scroll"] .demo-subject { opacity: 0; filter: blur(8px); transform: translateY(14px); }
+      .demo-stage[data-category="scroll"].is-visible .demo-subject { opacity: 1; filter: blur(0); transform: translateY(0); transition: opacity 600ms ease, filter 600ms ease, transform 600ms cubic-bezier(0.2, 0.8, 0.2, 1); }
+      .demo-stage[data-category="scroll"][data-variant="1"].is-visible .demo-subject { animation: scroll-scale 700ms cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+      .demo-stage[data-category="scroll"][data-variant="2"].is-visible .demo-subject { animation: scroll-slide 750ms cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+      .demo-stage[data-category="scroll"][data-variant="3"].is-visible .demo-subject { animation: scroll-flip 850ms ease both; }
+      .demo-stage[data-category="scroll"][data-variant="4"].is-visible .demo-subject { animation: scroll-bounce 850ms cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+      .demo-stage[data-category="scroll"][data-variant="5"].is-visible .demo-subject { animation: scroll-blur 800ms ease both; }
+      .demo-stage[data-category="scroll"][data-variant="6"].is-visible .demo-subject { animation: scroll-rotate 800ms ease both; }
+      .demo-stage[data-category="scroll"][data-variant="7"].is-visible .demo-subject { animation: scroll-rise 700ms ease both; }
+      .demo-stage[data-category="scroll"][data-variant="8"].is-visible .demo-subject { animation: scroll-spring 900ms cubic-bezier(0.16, 1.5, 0.3, 1) both; }
+      .demo-stage[data-category="scroll"][data-variant="9"].is-visible .demo-subject { animation: scroll-fade 1s ease both; }
+      @keyframes scroll-scale { from { opacity: 0; transform: scale(0.6); } to { opacity: 1; transform: scale(1); } }
+      @keyframes scroll-slide { from { opacity: 0; transform: translateX(-28px); } to { opacity: 1; transform: translateX(0); } }
+      @keyframes scroll-flip { from { opacity: 0; transform: perspective(400px) rotateX(-60deg); } to { opacity: 1; transform: perspective(400px) rotateX(0); } }
+      @keyframes scroll-bounce { 0% { opacity: 0; transform: translateY(-22px); } 65% { opacity: 1; transform: translateY(5px); } 100% { transform: translateY(0); } }
+      @keyframes scroll-blur { from { opacity: 0; filter: blur(12px); transform: scale(1.06); } to { opacity: 1; filter: blur(0); transform: scale(1); } }
+      @keyframes scroll-rotate { from { opacity: 0; transform: rotate(-14deg) translateY(10px); } to { opacity: 1; transform: rotate(0) translateY(0); } }
+      @keyframes scroll-rise { from { opacity: 0; transform: translateY(24px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
+      @keyframes scroll-spring { from { opacity: 0; transform: scale(0.4); } to { opacity: 1; transform: scale(1); } }
+      @keyframes scroll-fade { from { opacity: 0; } to { opacity: 1; } }
+
+      .demo-stage[data-category="physics"] .demo-subject { animation-duration: 1.7s; animation-iteration-count: infinite; animation-timing-function: cubic-bezier(0.36, 0.07, 0.19, 0.97); }
+      .demo-stage[data-category="physics"][data-variant="0"] .demo-subject { animation-name: physics-bounce; }
+      .demo-stage[data-category="physics"][data-variant="1"] .demo-subject { animation-name: physics-pendulum; }
+      .demo-stage[data-category="physics"][data-variant="2"] .demo-subject { animation-name: physics-spring; }
+      .demo-stage[data-category="physics"][data-variant="3"] .demo-subject { animation-name: physics-squash; }
+      .demo-stage[data-category="physics"][data-variant="4"] .demo-subject { animation-name: physics-sway; }
+      .demo-stage[data-category="physics"][data-variant="5"] .demo-subject { animation-name: physics-drop; }
+      .demo-stage[data-category="physics"][data-variant="6"] .demo-subject { animation-name: physics-elastic; }
+      .demo-stage[data-category="physics"][data-variant="7"] .demo-subject { animation-name: physics-roll; }
+      .demo-stage[data-category="physics"][data-variant="8"] .demo-subject { animation-name: physics-hop; }
+      .demo-stage[data-category="physics"][data-variant="9"] .demo-subject { animation-name: physics-float; }
+      @keyframes physics-bounce { 50% { transform: translateY(-12px); } 70% { transform: translateY(0) scaleY(0.86); } }
+      @keyframes physics-pendulum { 25% { transform: rotate(18deg); transform-origin: top center; } 75% { transform: rotate(-18deg); transform-origin: top center; } }
+      @keyframes physics-spring { 35% { transform: scale(1.2, 0.8) translateY(5px); } 65% { transform: scale(0.9, 1.12) translateY(-5px); } }
+      @keyframes physics-squash { 25% { transform: scaleX(1.18) scaleY(0.84); } 50% { transform: scaleX(0.88) scaleY(1.12); } }
+      @keyframes physics-sway { 25% { transform: translateX(8px) rotate(5deg); } 75% { transform: translateX(-8px) rotate(-5deg); } }
+      @keyframes physics-drop { 30% { transform: translateY(16px) scaleY(0.84); } 55% { transform: translateY(-8px); } }
+      @keyframes physics-elastic { 25% { transform: scaleX(1.2) scaleY(0.82); } 55% { transform: scaleX(0.82) scaleY(1.18); } 80% { transform: scale(1.04); } }
+      @keyframes physics-roll { 50% { transform: translateX(18px) rotate(180deg); } }
+      @keyframes physics-hop { 20%, 60% { transform: translateY(-10px); } 40%, 80% { transform: translateY(0); } }
+      @keyframes physics-float { 50% { transform: translateY(-6px) rotate(2deg); } }
+
+      .card-meta {
+        padding: 12px 13px 13px;
+      }
+
+      .card-title-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+      }
+
+      .card-title {
+        overflow: hidden;
+        color: #eceaf1;
+        font-size: 12px;
+        font-weight: 560;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .card-number {
+        flex: 0 0 auto;
+        color: #696875;
+        font: 10px ui-monospace, SFMono-Regular, Menlo, monospace;
+      }
+
+      .card-description {
+        min-height: 28px;
+        margin: 5px 0 0;
+        color: #85838f;
+        font-size: 10px;
+        line-height: 1.45;
+      }
+
+      .card-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 11px;
+      }
+
+      .category-tag {
+        padding: 5px 7px;
+        border: 1px solid hsla(var(--hue), 75%, 68%, 0.17);
+        border-radius: 5px;
+        color: hsl(var(--hue), 75%, 78%);
+        background: hsla(var(--hue), 70%, 60%, 0.07);
+        font: 9px ui-monospace, SFMono-Regular, Menlo, monospace;
+        letter-spacing: 0.02em;
+      }
+
+      .try-hint {
+        color: #686673;
+        font-size: 9px;
+      }
+
+      .empty-state {
+        grid-column: 1 / -1;
+        padding: 75px 20px;
+        border: 1px dashed var(--line);
+        border-radius: var(--radius);
+        color: var(--muted);
+        text-align: center;
+      }
+
+      .empty-state strong {
+        display: block;
+        margin-bottom: 8px;
+        color: var(--ink);
+        font-size: 15px;
+      }
+
+      .footer {
+        display: flex;
+        justify-content: space-between;
+        gap: 20px;
+        margin-top: 40px;
+        padding-top: 15px;
+        border-top: 1px solid var(--line);
+        color: #686673;
+        font-size: 10px;
+      }
+
+      .footer kbd {
+        padding: 2px 5px;
+        border: 1px solid var(--line);
+        border-radius: 4px;
+        color: #9a98a4;
+        font: 10px ui-monospace, SFMono-Regular, Menlo, monospace;
+      }
+
+      @media (max-width: 1100px) {
+        .motion-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+        .shell { padding-right: 28px; padding-left: 28px; }
+        .hero { padding-top: 60px; }
+      }
+
+      @media (max-width: 760px) {
+        .shell { padding-right: 18px; padding-left: 18px; }
+        .hero { grid-template-columns: 1fr; align-items: start; padding: 52px 0 30px; }
+        .count-card { display: flex; align-items: center; gap: 12px; min-width: 0; width: fit-content; padding: 10px 12px; }
+        .count-card strong { font-size: 22px; }
+        .count-card span { margin-top: 0; }
+        .toolbar { align-items: stretch; flex-direction: column-reverse; gap: 13px; }
+        .search { flex: initial; width: 100%; }
+        .motion-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; }
+        .demo-stage { height: 140px; }
+      }
+
+      @media (max-width: 430px) {
+        .motion-grid { grid-template-columns: 1fr; }
+        .demo-stage { height: 165px; }
+        .top-note { font-size: 9px; }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after {
+          scroll-behavior: auto !important;
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.01ms !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="shell">
+      <header class="topbar">
+        <a class="brand" href="#" aria-label="Motion Atlas home">
+          <span class="brand-mark" aria-hidden="true">✳</span>
+          <span>motion atlas</span>
+        </a>
+        <div class="top-note"><span class="status-dot"></span> A tiny playground for big ideas</div>
+      </header>
+
+      <section class="hero" aria-labelledby="page-title">
+        <div>
+          <p class="eyebrow">01 / The little details matter</p>
+          <h1 id="page-title">Make the internet <span>feel alive.</span></h1>
+          <p class="hero-copy">
+            A collection of small, delightful moments for the web. Hover, move,
+            click, and explore 100 motion ideas you can borrow for your next project.
+          </p>
+        </div>
+        <div class="count-card" aria-label="100 animations in 10 collections">
+          <strong id="total-count">100</strong>
+          <span>motions to explore</span>
+        </div>
+      </section>
+
+      <section aria-label="Animation library">
+        <div class="toolbar">
+          <nav class="filters" id="filters" aria-label="Filter by animation category"></nav>
+          <label class="search">
+            <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+              <circle cx="8.7" cy="8.7" r="5.8" stroke="currentColor" stroke-width="1.5" />
+              <path d="m13 13 4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+            </svg>
+            <input id="search" type="search" placeholder="Find a little moment..." autocomplete="off" />
+          </label>
+        </div>
+        <div class="results-line">
+          <span id="results-label">All moments</span>
+          <span id="results-count" aria-live="polite">100 moments</span>
+        </div>
+        <div class="motion-grid" id="motion-grid"></div>
+      </section>
+
+      <footer class="footer">
+        <span>Made for curious fingers and creative minds.</span>
+        <span>Tip: move your pointer over a card. Click what asks to be clicked.</span>
+      </footer>
+    </main>
+
+    <script>
+      const collections = [
+        {
+          id: "hover", label: "Hover", hue: 81, names: [
+            ["Lift off", "A tiny lift gives a button a little room to breathe."],
+            ["Tilt & smile", "A friendly tilt adds a little personality."],
+            ["Neon hello", "A soft glow makes the focus feel unmistakable."],
+            ["Soft expand", "Scale up just enough to invite a closer look."],
+            ["Perspective peek", "A 3D turn gives a flat surface another dimension."],
+            ["Skew away", "A little skew creates a lively directional nudge."],
+            ["Pillowy", "Corners soften as the element gently grows."],
+            ["Color drift", "A hue shift brings a small flash of color."],
+            ["Turn around", "A full turn makes a surprisingly playful hover."],
+            ["Echo trail", "A pair of fading shadows follows the movement."]
+          ]
+        },
+        {
+          id: "cursor", label: "Cursor", hue: 190, names: [
+            ["Magnetic pull", "The element leans toward your pointer."],
+            ["Gentle magnet", "A softer magnetic field keeps things subtle."],
+            ["3D tilt", "Pointer position tilts the surface in perspective."],
+            ["Pointer orbit", "The element follows with a little rotational flair."],
+            ["Repel field", "Move close and watch the element drift away."],
+            ["Elastic stretch", "Pointer distance nudges the scale and position."],
+            ["Spotlight tilt", "Tilt and glow combine for a tactile surface."],
+            ["Slow follow", "A trailing response feels soft and weighted."],
+            ["Horizontal glide", "A simple left-right cursor response."],
+            ["Vertical drift", "A gentle up-and-down pointer reaction."]
+          ]
+        },
+        {
+          id: "click", label: "Click", hue: 270, names: [
+            ["Press in", "A satisfying press compresses under your finger."],
+            ["Pop back", "A quick spring pops the button back into place."],
+            ["Twist", "A click adds a tiny turn and a bright flash."],
+            ["Morph", "The button rounds into a soft, squishy shape."],
+            ["Shake it off", "A quick shake gives feedback with a wink."],
+            ["Hop", "A quick hop makes the click feel light."],
+            ["Flip side", "Turn the button to reveal the other side."],
+            ["Ripple ring", "A ring expands around the point of interaction."],
+            ["Heart beat", "A double pulse makes the moment feel warm."],
+            ["Slide over", "The button glides sideways with a quick click."]
+          ]
+        },
+        {
+          id: "text", label: "Text", hue: 324, names: [
+            ["Floating type", "Words float gently above the page."],
+            ["Wave hello", "An easy wave rolls through the letters."],
+            ["Soft reveal", "A quiet fade makes text feel like it arrived."],
+            ["Glitch flicker", "A quick chromatic jitter adds a digital edge."],
+            ["Letter spacing", "Type opens up, then settles back together."],
+            ["Glow pulse", "A warm halo breathes around the message."],
+            ["Blur in", "Focus moves from soft to sharp and back."],
+            ["Pendulum type", "Words swing gently from side to side."],
+            ["Color shift", "A small color drift adds a living accent."],
+            ["Bounce letters", "A springy bounce keeps the message playful."]
+          ]
+        },
+        {
+          id: "loader", label: "Loaders", hue: 42, names: [
+            ["Orbit ring", "A crisp ring spins while you wait."],
+            ["Pulse dot", "A single dot breathes in and out."],
+            ["Split orbit", "A compact ring folds through its orbit."],
+            ["Flip tile", "A small tile flips while work is happening."],
+            ["Breathing ring", "The ring expands and fades in a calm rhythm."],
+            ["Wiggle", "A short wiggle keeps waiting from feeling static."],
+            ["Expanding ring", "A faint halo grows around the center."],
+            ["Bouncing dot", "A dot bounces through its little loop."],
+            ["Scan bar", "A narrow bar stretches like a scanning beam."],
+            ["Squish loop", "A soft shape squishes and springs back."]
+          ]
+        },
+        {
+          id: "background", label: "Background", hue: 153, names: [
+            ["Color tide", "A slow color change makes the backdrop flow."],
+            ["Blueprint grid", "A tidy grid gives the stage a technical feel."],
+            ["Drifting blob", "A soft ambient blob wanders through the scene."],
+            ["Cursor glow", "Move your pointer to cast a pool of light."],
+            ["Tilted grid", "A diagonal grid adds a little depth."],
+            ["Moving lines", "Fine lines drift quietly across the canvas."],
+            ["Ambient glow", "A low, soft light gathers at the horizon."],
+            ["Star field", "A tiny field of lights twinkles softly."],
+            ["Pinstripe", "Quiet pinstripes bring a little texture."],
+            ["Light sweep", "A sheen travels across the background."]
+          ]
+        },
+        {
+          id: "card", label: "Cards", hue: 221, names: [
+            ["Depth card", "A card tilts as if it has a little weight."],
+            ["Flip card", "A card rotates to show its reverse."],
+            ["Easy swing", "A gentle rotation makes the card feel loose."],
+            ["Stacked deck", "Layers appear beneath the card as it lifts."],
+            ["Fold forward", "A slight forward fold catches the light."],
+            ["Pendulum card", "The card swings through a springy arc."],
+            ["Slide reveal", "A side shift creates a sense of motion."],
+            ["Glass tilt", "Perspective and translucency make glass feel touchable."],
+            ["Soft corners", "Rounded edges arrive with a gentle lift."],
+            ["Brighten", "The whole surface warms up when you approach."]
+          ]
+        },
+        {
+          id: "icon", label: "Icons", hue: 18, names: [
+            ["Spin", "A small rotation turns a static symbol into a cue."],
+            ["Pulse", "A simple pulse makes the symbol feel present."],
+            ["Swing", "A symbol swings gently from its center."],
+            ["Float", "The icon takes a little trip upward."],
+            ["Pop", "A quick scale pop celebrates the moment."],
+            ["Wobble", "A little wobble puts a smile on a tiny detail."],
+            ["Flip", "The symbol turns over in 3D."],
+            ["Blink", "A quiet blink can draw a little attention."],
+            ["Orbit", "A tiny orbit suggests energy and direction."],
+            ["Heartbeat", "Two quick beats make a lively status mark."]
+          ]
+        },
+        {
+          id: "scroll", label: "On view", hue: 285, names: [
+            ["Fade up", "This demo appears as it enters the viewport."],
+            ["Scale in", "Scale and opacity settle together on reveal."],
+            ["Slide in", "The subject glides in from the side."],
+            ["Flip in", "A perspective flip brings the subject into view."],
+            ["Bounce in", "A soft bounce welcomes the subject."],
+            ["Blur reveal", "A blurred shape resolves as it comes into view."],
+            ["Rotate in", "A subtle turn settles as the subject appears."],
+            ["Rise up", "A small upward movement reveals the subject."],
+            ["Spring in", "An elastic scale gives the entrance a little bounce."],
+            ["Fade through", "A steady fade keeps the entrance understated."]
+          ]
+        },
+        {
+          id: "physics", label: "Physics", hue: 112, names: [
+            ["Bounce", "A soft bounce with a little squash at the landing."],
+            ["Pendulum", "A steady swing follows a pendulum-like rhythm."],
+            ["Spring", "A quick squash and stretch creates springy motion."],
+            ["Squash & stretch", "The shape deforms as if it has a little mass."],
+            ["Sway", "A gentle sway creates a breezy sense of movement."],
+            ["Drop & rebound", "The subject drops and rebounds with a soft landing."],
+            ["Elastic", "An elastic overshoot settles back to center."],
+            ["Roll", "A rolling turn carries the subject sideways."],
+            ["Little hop", "Two quick hops add a lightweight rhythm."],
+            ["Weightless drift", "A slow drift gives the subject an almost weightless feel."]
+          ]
+        }
+      ];
+
+      const symbols = ["✦", "↗", "◌", "✳", "✷", "⌁", "✺", "⟡", "✧", "♡"];
+      const samples = {
+        hover: ["hover me", "hello!", "glow", "grow", "look", "slide", "soft", "color", "spin", "echo"],
+        cursor: ["follow", "come closer", "tilt me", "orbit", "back off", "stretch", "spotlight", "slowly", "move", "drift"],
+        click: ["press", "pop!", "twist", "morph", "shake", "hop", "flip", "tap", "love", "slide"],
+        text: ["motion", "wave", "reveal", "glitch", "spacing", "glow", "focus", "swing", "color", "bounce"],
+        loader: ["", "", "", "", "", "", "", "", "", ""],
+        background: ["ambient", "grid", "drift", "light", "lines", "flow", "glow", "stars", "texture", "shine"],
+        card: ["depth", "front", "swing", "layers", "fold", "sway", "slide", "glass", "soft", "bright"],
+        icon: symbols,
+        scroll: ["appears", "scales", "slides", "flips", "bounces", "sharpens", "turns", "rises", "springs", "fades"],
+        physics: ["bounce", "swing", "spring", "squash", "sway", "drop", "elastic", "roll", "hop", "float"]
+      };
+
+      const entries = collections.flatMap((collection, categoryIndex) =>
+        collection.names.map(([name, description], variant) => ({
+          id: `${collection.id}-${variant}`,
+          category: collection.id,
+          categoryLabel: collection.label,
+          hue: (collection.hue + variant * 7) % 360,
+          variant,
+          number: categoryIndex * 10 + variant + 1,
+          name,
+          description,
+          sample: samples[collection.id][variant]
+        }))
+      );
+
+      const grid = document.querySelector("#motion-grid");
+      const filters = document.querySelector("#filters");
+      const search = document.querySelector("#search");
+      const resultCount = document.querySelector("#results-count");
+      const resultsLabel = document.querySelector("#results-label");
+      let activeCategory = "all";
+
+      function escapeHtml(value) {
+        return value.replace(/[&<>"']/g, (character) => ({
+          "&": "&amp;",
+          "<": "&lt;",
+          ">": "&gt;",
+          '"': "&quot;",
+          "'": "&#39;"
+        })[character]);
+      }
+
+      function renderFilters() {
+        const allButton = `<button class="filter" type="button" data-filter="all" aria-pressed="true">Everything <span class="filter-count">100</span></button>`;
+        filters.innerHTML = allButton + collections.map((collection) =>
+          `<button class="filter" type="button" data-filter="${collection.id}" aria-pressed="false">${collection.label}<span class="filter-count">10</span></button>`
+        ).join("");
+      }
+
+      function subjectMarkup(item) {
+        const label = escapeHtml(item.sample);
+        if (item.category === "loader") return `<div class="demo-subject subject-loader" aria-label="${escapeHtml(item.name)}"></div>`;
+        if (item.category === "icon") return `<div class="demo-subject subject-icon"><span class="glyph">${label}</span></div>`;
+        if (item.category === "text") return `<div class="demo-subject subject-text">${label}</div>`;
+        if (item.category === "click") return `<button class="demo-subject subject-button click-trigger" type="button">${label}</button>`;
+        if (item.category === "card") return `<div class="demo-subject subject-card"><span class="mini-label">${label}</span></div>`;
+        if (item.category === "physics") return `<div class="demo-subject subject-pill"><span class="mini-label">${label}</span></div>`;
+        if (item.category === "scroll") return `<div class="demo-subject subject-pill"><span class="mini-label">${label}</span></div>`;
+        if (item.category === "background") return `<div class="demo-subject subject-text"><span class="mini-label">${label}</span></div>`;
+        return `<div class="demo-subject subject-pill"><span class="mini-label">${label}</span></div>`;
+      }
+
+      function cardMarkup(item) {
+        const hint = item.category === "click" ? "click to try" :
+          item.category === "cursor" || item.category === "background" ? "move pointer" :
+          item.category === "scroll" ? "scroll into view" :
+          item.category === "loader" || item.category === "text" || item.category === "icon" || item.category === "physics" ? "watch it move" :
+          "hover to try";
+        return `
+          <article class="motion-card" style="--hue:${item.hue}" data-entry="${item.id}">
+            <div class="demo-stage" data-category="${item.category}" data-variant="${item.variant}" style="--hue:${item.hue}" aria-label="${escapeHtml(item.name)} animation preview">
+              <div class="stage-grid"></div>
+              ${subjectMarkup(item)}
+            </div>
+            <div class="card-meta">
+              <div class="card-title-row">
+                <span class="card-title">${escapeHtml(item.name)}</span>
+                <span class="card-number">${String(item.number).padStart(2, "0")}</span>
+              </div>
+              <p class="card-description">${escapeHtml(item.description)}</p>
+              <div class="card-footer">
+                <span class="category-tag">${escapeHtml(item.categoryLabel)}</span>
+                <span class="try-hint">${hint}</span>
+              </div>
+            </div>
+          </article>`;
+      }
+
+      function render() {
+        const query = search.value.trim().toLowerCase();
+        const matches = entries.filter((item) => {
+          const matchesCategory = activeCategory === "all" || item.category === activeCategory;
+          const searchable = `${item.name} ${item.description} ${item.categoryLabel}`.toLowerCase();
+          return matchesCategory && searchable.includes(query);
+        });
+
+        resultCount.textContent = `${matches.length} ${matches.length === 1 ? "moment" : "moments"}`;
+        const selected = collections.find((collection) => collection.id === activeCategory);
+        resultsLabel.textContent = selected ? `${selected.label} moments` : query ? "Search results" : "All moments";
+        grid.innerHTML = matches.length
+          ? matches.map(cardMarkup).join("")
+          : `<div class="empty-state"><strong>No little moments found.</strong>Try another search or choose a different collection.</div>`;
+        observeScrollDemos();
+      }
+
+      function observeScrollDemos() {
+        const stages = grid.querySelectorAll('.demo-stage[data-category="scroll"]');
+        if (!("IntersectionObserver" in window)) {
+          stages.forEach((stage) => stage.classList.add("is-visible"));
+          return;
+        }
+        const observer = new IntersectionObserver((records, currentObserver) => {
+          records.forEach((record) => {
+            if (record.isIntersecting) {
+              record.target.classList.add("is-visible");
+              currentObserver.unobserve(record.target);
+            }
+          });
+        }, { threshold: 0.18 });
+        stages.forEach((stage) => observer.observe(stage));
+      }
+
+      renderFilters();
+      render();
+
+      filters.addEventListener("click", (event) => {
+        const button = event.target.closest("[data-filter]");
+        if (!button) return;
+        activeCategory = button.dataset.filter;
+        filters.querySelectorAll("[data-filter]").forEach((filter) => {
+          filter.setAttribute("aria-pressed", String(filter === button));
+        });
+        render();
+      });
+
+      search.addEventListener("input", render);
+
+      grid.addEventListener("pointermove", (event) => {
+        const stage = event.target.closest(".demo-stage");
+        if (!stage) return;
+        const bounds = stage.getBoundingClientRect();
+        const x = event.clientX - bounds.left;
+        const y = event.clientY - bounds.top;
+        const normalizedX = (x / bounds.width - 0.5) * 2;
+        const normalizedY = (y / bounds.height - 0.5) * 2;
+        const scale = stage.dataset.category === "cursor" ? 11 : 0;
+        stage.style.setProperty("--mx", `${x}px`);
+        stage.style.setProperty("--my", `${y}px`);
+        stage.style.setProperty("--dx", `${normalizedX * scale}px`);
+        stage.style.setProperty("--dy", `${normalizedY * scale}px`);
+        stage.style.setProperty("--weak-dx", `${normalizedX * scale * 0.55}px`);
+        stage.style.setProperty("--weak-dy", `${normalizedY * scale * 0.55}px`);
+        stage.style.setProperty("--away-dx", `${-normalizedX * scale * 0.35}px`);
+        stage.style.setProperty("--away-dy", `${-normalizedY * scale * 0.35}px`);
+        stage.style.setProperty("--slow-dx", `${normalizedX * scale * 0.7}px`);
+        stage.style.setProperty("--slow-dy", `${normalizedY * scale * 0.7}px`);
+        stage.style.setProperty("--rx", `${-normalizedY * 10}deg`);
+        stage.style.setProperty("--ry", `${normalizedX * 10}deg`);
+        stage.style.setProperty("--twist", `${normalizedX * 2}deg`);
+        stage.style.setProperty("--tilt-dy", `${-normalizedY * 2}px`);
+      });
+
+      grid.addEventListener("pointerleave", (event) => {
+        const stage = event.target.closest(".demo-stage");
+        if (!stage || stage.contains(event.relatedTarget)) return;
+        stage.style.setProperty("--dx", "0px");
+        stage.style.setProperty("--dy", "0px");
+        stage.style.setProperty("--weak-dx", "0px");
+        stage.style.setProperty("--weak-dy", "0px");
+        stage.style.setProperty("--away-dx", "0px");
+        stage.style.setProperty("--away-dy", "0px");
+        stage.style.setProperty("--slow-dx", "0px");
+        stage.style.setProperty("--slow-dy", "0px");
+        stage.style.setProperty("--rx", "0deg");
+        stage.style.setProperty("--ry", "0deg");
+        stage.style.setProperty("--twist", "0deg");
+        stage.style.setProperty("--tilt-dy", "0px");
+      }, true);
+
+      grid.addEventListener("click", (event) => {
+        const trigger = event.target.closest(".click-trigger");
+        if (!trigger) return;
+        trigger.classList.toggle("is-active");
+        trigger.setAttribute("aria-pressed", String(trigger.classList.contains("is-active")));
+      });
+
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "/" && document.activeElement !== search) {
+          event.preventDefault();
+          search.focus();
+        }
+        if (event.key === "Escape" && document.activeElement === search) {
+          search.value = "";
+          search.blur();
+          render();
+        }
+      });
+    </script>
+  </body>
+</html>
